@@ -1,0 +1,36 @@
+npx create-react-app
+
+npm install @mui/material @emotion/react @emotion/styled
+
+npm install @mui/material @mui/styled-engine-sc styled-components
+
+npm install @mui/icons-material
+
+npm install @mui/styles
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  
+
+npm ERR! Object for dependency "@babel/core" is empty.
+https://stackoverflow.com/questions/65517361/npm-err-object-for-dependency-babel-core-is-empty
+
+Delete node_modules folder
+Delete package-lock.json
+Run "npm install" in the console
+
+npm i react-router-dom
+npm i reactstrap
+npm i sass
+
+-------Auth
+npm i axios
+npm i react-hook-form
+
+------mui
+npm i @mui/lab
+npm i date-fns
+
+----------footer
+
+npm i styled-components
