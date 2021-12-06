@@ -1,20 +1,26 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 const customTheme = createTheme({
   palette: {
     primary: {
-      light: '#ffffff',
-      main: '#fafafa',
-      dark: '#c7c7c7',
-      contrastText: '#000',
+      light: "#ffffff",
+      main: "#fafafa",
+      dark: "#c7c7c7",
+      contrastText: "#000",
     },
     secondary: {
-      light: '#ffffff',
-      main: '#ffcdd2',
-      dark: '#cb9ca1',
-      contrastText: '#000',
+      light: "#ffffff",
+      main: "#ffcdd2",
+      dark: "#cb9ca1",
+      contrastText: "#000",
     },
+    // [customTheme.breakpoints.up("sm")]: {
+    //   width: "50%",
+    //   borderColor: "error.main",
+    //   border: 2,
+    //   borderRadius: "16px",
+    // },
   },
 });
 
-export default customTheme
+export default customTheme;

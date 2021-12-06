@@ -3,7 +3,11 @@ import Appbar from "./Appbar";
 import Leftbar from "./Leftbar";
 import Navbar from "./Navbar";
 import Tprofile from "./Tprofile";
+import Post from "./Post";
 import Footer from "./footer/Footer";
+import SearchBar from "./SearchBar";
+import useStyles from "../Styles";
+
 //-----------------------MUI
 import {
   styled,
@@ -60,25 +64,25 @@ const TherapistCard = (
       <CardMedia
         component="img"
         height="auto"
-        image="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-grey-photo-placeholder-illustrations-vectors-default-avatar-profile-icon-grey-photo-placeholder-99724602.jpg"
+        image="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997__340.jpg"
         alt="Paella dish"
       />
       <Typography variant="h6" color="textPrimary" textAlign="center">
         Name
       </Typography>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" color="text.secondary" textAlign="left">
         Expertise
       </Typography>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" color="text.secondary" textAlign="left">
         Ort
       </Typography>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" color="text.secondary" textAlign="left">
         English , Deutsch
       </Typography>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" color="text.secondary" textAlign="left">
         3 Jahre Erfahrung
       </Typography>
-      <Typography variant="caption" color="text.secondary">
+      <Typography variant="caption" color="text.secondary" textAlign="left">
         70,00 (inkl. MwSt.) /Stunde
       </Typography>
     </CardContent>
@@ -93,22 +97,48 @@ const TherapistCard = (
 );
 
 const Home = () => {
+  const classes = useStyles();
   return (
     <div>
       <Navbar />
-
+      {/* <SearchBar /> */}
+      {/* className={classes.caption} */}
       <Box sx={{ flexGrow: 1, padding: "10px" }}>
         <Grid container spacing={0} rowSpacing={1}>
-          <Grid item xs={0} sm={2} md={3}>
-            <Item sx={{ height: "97%" }}>xs=6 md=8</Item>
+          {/* //---------------------------------------------Left Side */}
+          <Grid item xs={0} sm={2} md={2}>
+            <Item sx={{ height: "97%" }}></Item>
           </Grid>
-          <Grid item xs={12} sm={8} md={6}>
+          <Grid item xs={12} sm={8} md={8}>
             <Item sx={{ boxShadow: 0 }}>
               <Typography variant="h6" component="div">
                 Psychologische Beratung & Onlinetherapie für alle
               </Typography>
             </Item>
-            <Item sx={{ display: "inline-flex", boxShadow: 0 }}>
+            {/* //----------------------------------------------------------Post */}
+            <Item
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                justifyContent: "center",
+                boxShadow: 0,
+                width: "100%",
+              }}
+            >
+              <Post />
+            </Item>
+            {/* //----------------------------------------------------------TherapistCard */}
+            <Item
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: 0,
+              }}
+            >
+              <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
+              <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
               <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
               <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
             </Item>
@@ -118,8 +148,9 @@ const Home = () => {
               <Card sx={{ width: "100%" }}>{card}</Card>
             </Item>
           </Grid>
-          <Grid item xs={0} sm={2} md={3}>
-            <Item sx={{ height: "97%" }}>xs=6 md=4</Item>
+          {/* //---------------------------------------------Right Side */}
+          <Grid item xs={0} sm={2} md={2}>
+            <Item sx={{ height: "97%" }}></Item>
           </Grid>
         </Grid>
       </Box>

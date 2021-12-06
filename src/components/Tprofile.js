@@ -3,6 +3,11 @@ import { AuthContext } from "../context/AuthContext";
 import { StateContext } from "../context/Context";
 import Navbar from "./Navbar";
 import Footer from "./footer/Footer";
+import ProtectedRoute from "./ProtectedRoute";
+import Youtube from "./Youtube";
+import Tcontact from "./Tcontact";
+import useStyles from "../Styles";
+
 import Image from "./Image";
 import {
   styled,
@@ -49,10 +54,15 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "left",
   color: theme.palette.text.secondary,
 }));
+//-----------------------------------------MAIN function
 
 export default function Tprofile() {
-  const authcontext = useContext(AuthContext);
-  console.log(authcontext);
+  const classes = useStyles();
+  const {
+    user: { _id, email, name, phone },
+  } = useContext(AuthContext);
+  // const aaa = useContext(AuthContext);
+  // console.log(aaa);
   const [expanded, setExpanded] = React.useState(false);
   const [value, setValue] = React.useState(new Date()); //for Date
 
@@ -62,21 +72,21 @@ export default function Tprofile() {
 
   return (
     <>
-      <Navbar />
-      <Box sx={{ flexGrow: 1, padding: "10px" }}>
+      <ProtectedRoute>
+        <Navbar />
+      </ProtectedRoute>
+
+      <Box className={classes.box}>
         <Grid container spacing={2} rowSpacing={1}>
           <Grid item xs={0} sm={0} md={1}></Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Item sx={{ boxShadow: 0 }}>
               <Card sx={{ maxWidth: "100%" }}>
-                <Typography
-                  variant="h4"
-                  color="textPrimary"
-                  textAlign="center"
-                ></Typography>
+                <Typography variant="h4" color="textPrimary" textAlign="center">
+                  {name}
+                </Typography>
                 <CardMedia
                   component="img"
-                  height="194"
                   image="https://cdn.pixabay.com/photo/2017/01/29/21/16/nurse-2019420_1280.jpg"
                   alt="Paella dish"
                 />
@@ -144,22 +154,17 @@ export default function Tprofile() {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                   <CardContent>
-                    <Typography paragraph>Method:</Typography>
                     <Typography paragraph>
-                      Heat 1/2 cup of the broth in a pot until simmering, add
-                      saffron and set aside for 10 minutes.
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Excepturi, sequi.
                     </Typography>
                     <Typography paragraph>
-                      Heat oil in a (14- to 16-inch) paella pan or a large, deep
-                      skillet over medium-high heat. Add chicken, shrimp and
+                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                      Omnis unde facere sunt temporibus, sit id.
                     </Typography>
                     <Typography paragraph>
-                      Add rice and stir very gently to distribute. Top with ar
-                      minutes more. (Discard any mussels that don’t open.)
-                    </Typography>
-                    <Typography>
-                      Set aside off of the heat to let rest for 10 minutes, and
-                      then serve.
+                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                      Sunt voluptatibus officiis esse sapiente ad illum!
                     </Typography>
                   </CardContent>
                 </Collapse>
@@ -187,7 +192,7 @@ export default function Tprofile() {
             <br />
             <Item>
               <Typography variant="h4" color="textPrimary" textAlign="left">
-                Über mich
+                Über mich {phone}
               </Typography>
               <Typography paragraph>
                 Add rice and stir very gently to distribute. Top with ar minutes
@@ -199,13 +204,47 @@ export default function Tprofile() {
                 centuries, but also the leap into electronic typesetting,
                 remaining essentially unchanged.
               </Typography>
+
+              <Item
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignContent: "center",
+                  flexWrap: "wrap",
+                  boxShadow: 0,
+                }}
+              >
+                <Item sx={{ boxShadow: 0, ml: 1 }}>
+                  <Youtube videoId="S_AI8smFpyA" />
+                </Item>
+                <Item sx={{ boxShadow: 0, ml: 1 }}>
+                  <Youtube videoId="hQc0B4Gwmhg" />
+                </Item>
+                <Item sx={{ boxShadow: 0, ml: 1 }}>
+                  <Youtube videoId="S_AI8smFpyA" />
+                </Item>
+                <Item sx={{ boxShadow: 0, ml: 1 }}>
+                  <Youtube videoId="hQc0B4Gwmhg" />
+                </Item>
+                <Item sx={{ boxShadow: 0, ml: 1 }}>
+                  <Youtube videoId="S_AI8smFpyA" />
+                </Item>
+                <Item sx={{ boxShadow: 0, ml: 1 }}>
+                  <Youtube videoId="hQc0B4Gwmhg" />
+                </Item>
+              </Item>
             </Item>
           </Grid>
           <Grid item xs={12} md={5}>
-            <Item>xs=6 md=4</Item>
+            <Item sx={{ boxShadow: 0 }}>
+              {/* //-------------------------------Tcontact Component */}
+
+              <Tcontact />
+            </Item>
           </Grid>
           <Grid item xs={12} md={7}>
-            <Item>
+            <Item sx={{ boxShadow: 0 }}>
+              {/* //-------------------------------Image Component */}
               <Image />
             </Item>
           </Grid>

@@ -34,3 +34,7 @@ npm i date-fns
 ----------footer
 
 npm i styled-components
+
+---------youtube
+npm install react-youtube
+https://www.youtube.com/watch?v=_nBlN9yp9R8&ab_channel=CodingEntrepreneurs
