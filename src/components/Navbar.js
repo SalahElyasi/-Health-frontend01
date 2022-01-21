@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import SettingProfile from "./SettingProfile";
 import PostMaker from "./PostMaker";
+import useStyles from "../Styles";
 
 import { Link } from "react-router-dom";
 import {
@@ -12,118 +13,275 @@ import {
   Typography,
   Button,
   Avatar,
+  styled,
+  alpha,
+  Menu,
+  MenuItem,
+  Divider,
 } from "@mui/material";
-import { Menu, Settings, AddBox, Home } from "@mui/icons-material";
+import {
+  Settings,
+  AddBox,
+  Home,
+  Logout,
+  ArrowDropDown,
+  ArrowDropDownCircle,
+} from "@mui/icons-material";
+//-------------------------------------------------------------------
+const StyledMenu = styled((props) => (
+  <Menu
+    elevation={0}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+))(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
+    boxShadow:
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
+    },
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      "&:active": {
+        backgroundColor: alpha(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+      },
+    },
+  },
+}));
+
 //--------------------------------------------------------Main Function
 const Navbar = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  //-----------------------------
+  const classes = useStyles();
   const [setting, setSetting] = useState(false);
   const [postForm, setPostForm] = useState(false);
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, setError } = useContext(AuthContext);
   const {
-    user: { _id, email, name },
+    user: { email, name, account_type, image },
   } = useContext(AuthContext);
   //------------------------------------------Function
 
   const toggleSetting = () => {
     setSetting(!setting);
     setPostForm(false);
+    handleClose();
   };
   const togglePost = () => {
     setPostForm(!postForm);
     setSetting(false);
   };
+
+  //-------------------------
+  const downMenu = (
+    <div>
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        onClick={handleClick}
+      >
+        <ArrowDropDownCircle />
+      </IconButton>
+      <StyledMenu
+        id="demo-customized-menu"
+        MenuListProps={{
+          "aria-labelledby": "demo-customized-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={toggleSetting} disableRipple>
+          <Settings />
+          Settings & privacy
+        </MenuItem>
+
+        <Divider sx={{ my: 0.5 }} />
+
+        <MenuItem component={Link} to="/home" onClick={logout} disableRipple>
+          <Logout />
+          logout
+        </MenuItem>
+      </StyledMenu>
+    </div>
+  );
+
+  let AuthButton;
+  if (!isAuthenticated) {
+    setError(null);
+    AuthButton = (
+      <div>
+        <Button
+          component={Link}
+          to="/signin"
+          color="inherit"
+          variant="contained"
+        >
+          Signin
+        </Button>
+
+        <Button
+          component={Link}
+          to="/signup"
+          sx={{ ml: 2, mr: 2 }}
+          color="inherit"
+          variant="contained"
+        >
+          Signup
+        </Button>
+      </div>
+    );
+  } else {
+    if (isAuthenticated && account_type === "therapeut") {
+      AuthButton = (
+        <>
+          <Box className={classes.navbarText}>
+            <Typography to="/therapeutprofile" variant="caption">
+              {name}
+            </Typography>
+            <Typography
+              component={Link}
+              to="/therapeutprofile"
+              sx={{ fontSize: 8, mt: 0 }}
+              variant="caption"
+            >
+              {email}
+            </Typography>
+          </Box>
+          <Link to="/therapeutprofile">
+            <Avatar sx={{ ml: 2, mr: 2 }} alt="Travis Howard" src={image} />
+          </Link>
+
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ ml: 2 }}
+          >
+            <AddBox onClick={() => togglePost()} />
+          </IconButton>
+          {downMenu}
+        </>
+      );
+    } else if (isAuthenticated && account_type === "user") {
+      AuthButton = (
+        <>
+          <Box className={classes.navbarText}>
+            <Typography to="/userprofile" variant="caption">
+              {name}
+            </Typography>
+            <Typography
+              component={Link}
+              to="/userprofile"
+              sx={{ fontSize: 8, mt: 0 }}
+              variant="caption"
+            >
+              {email}
+            </Typography>
+          </Box>
+
+          <Link to="/userprofile">
+            <Avatar sx={{ ml: 2, mr: 2 }} alt="Travis Howard" src={image} />
+          </Link>
+          <div>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleClick}
+            >
+              <ArrowDropDownCircle />
+            </IconButton>
+            <StyledMenu
+              id="demo-customized-menu"
+              MenuListProps={{
+                "aria-labelledby": "demo-customized-button",
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={toggleSetting} disableRipple>
+                <Settings />
+                Settings & privacy
+              </MenuItem>
+
+              <Divider sx={{ my: 0.5 }} />
+
+              <MenuItem
+                component={Link}
+                to="/home"
+                onClick={logout}
+                disableRipple
+              >
+                <Logout />
+                logout
+              </MenuItem>
+            </StyledMenu>
+          </div>
+        </>
+      );
+    }
+  }
+
   //------------------------------------------return
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Link to="/home">
-              <Avatar
-                sx={{ height: "50px", width: "100px", mr: 2 }}
-                variant="square"
-                alt="logo"
-              >
-                Logo
-              </Avatar>
-            </Link>
+            <Avatar
+              component={Link}
+              to="/home"
+              sx={{ height: "50px", width: "100px", mr: 2 }}
+              variant="square"
+              alt="logo"
+            >
+              Logo
+            </Avatar>
             <Link to="/home">
               <Home />
             </Link>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Health
             </Typography>
-            {!isAuthenticated ? (
-              <div>
-                <Link to="/signin">
-                  <Button color="inherit" variant="contained">
-                    Signin
-                  </Button>
-                </Link>
-                <Link to="/signup">
-                  <Button
-                    sx={{ ml: 2, mr: 2 }}
-                    color="inherit"
-                    variant="contained"
-                  >
-                    Signup
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <>
-                <Link to="/myprofile">
-                  <Typography variant="caption" display="block" gutterBottom>
-                    {name}
-                  </Typography>
-                  <Typography
-                    sx={{ fontSize: 8 }}
-                    variant="caption"
-                    display="block"
-                    gutterBottom
-                  >
-                    {email}
-                  </Typography>
-                </Link>
-                <Link to="/myprofile">
-                  <Avatar
-                    sx={{ ml: 2, mr: 2 }}
-                    alt="Travis Howard"
-                    src="https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=800&q=60"
-                  />
-                </Link>
-                <IconButton
-                  size="large"
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  sx={{ ml: 2 }}
-                >
-                  <AddBox onClick={() => togglePost()} />
-                </IconButton>
-                <Link to="/home">
-                  <Button
-                    sx={{ ml: 2, mr: 2 }}
-                    color="inherit"
-                    variant="contained"
-                    onClick={logout}
-                  >
-                    logout
-                  </Button>
-                </Link>
-              </>
-            )}
+            {AuthButton}
 
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-            >
-              <Settings onClick={() => toggleSetting()} />
-            </IconButton>
-            <IconButton
+            {/* <IconButton
               size="large"
               edge="start"
               color="inherit"
@@ -131,7 +289,7 @@ const Navbar = () => {
               sx={{ mr: 2 }}
             >
               <Menu />
-            </IconButton>
+            </IconButton> */}
           </Toolbar>
         </AppBar>
         {setting && <SettingProfile />}

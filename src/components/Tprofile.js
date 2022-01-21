@@ -1,11 +1,13 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { StateContext } from "../context/Context";
 import Navbar from "./Navbar";
 import Footer from "./footer/Footer";
+import Post from "./Post";
 import ProtectedRoute from "./ProtectedRoute";
 import Youtube from "./Youtube";
 import Tcontact from "./Tcontact";
+import Success from "./alerts/Success";
 import useStyles from "../Styles";
 
 import Image from "./Image";
@@ -54,15 +56,27 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "left",
   color: theme.palette.text.secondary,
 }));
-//-----------------------------------------MAIN function
+//-----------------------------------------------------------------------MAIN function
 
 export default function Tprofile() {
   const classes = useStyles();
-  const {
-    user: { _id, email, name, phone },
-  } = useContext(AuthContext);
-  // const aaa = useContext(AuthContext);
-  // console.log(aaa);
+  const { isAuthenticated, posts, user, myPosts } = useContext(AuthContext);
+
+  const myPost = () => {
+    try {
+      const UserPosts = posts.filter(
+        (post) => post.postedBy.toString() === user._id.toString()
+      );
+      return UserPosts;
+    } catch {
+      return [];
+    }
+  };
+  const UserPosts = myPost();
+
+  // const {
+  //   user: { _id, email, name, phone },
+  // } = useContext(AuthContext);
   const [expanded, setExpanded] = React.useState(false);
   const [value, setValue] = React.useState(new Date()); //for Date
 
@@ -83,11 +97,11 @@ export default function Tprofile() {
             <Item sx={{ boxShadow: 0 }}>
               <Card sx={{ maxWidth: "100%" }}>
                 <Typography variant="h4" color="textPrimary" textAlign="center">
-                  {name}
+                  {user.name}
                 </Typography>
                 <CardMedia
                   component="img"
-                  image="https://cdn.pixabay.com/photo/2017/01/29/21/16/nurse-2019420_1280.jpg"
+                  image={user.image} //"https://cdn.pixabay.com/photo/2017/01/29/21/16/nurse-2019420_1280.jpg"
                   alt="Paella dish"
                 />
                 <CardContent>
@@ -106,21 +120,19 @@ export default function Tprofile() {
                     Expertise
                   </Typography>
                   <Typography variant="h6" color="text.secondary">
-                    Ort
+                    {user.city}
                   </Typography>
                   <Typography variant="h6" color="text.secondary">
-                    English , Deutsch
+                    {user.languages}
                   </Typography>
                   <Typography variant="h6" color="text.secondary">
-                    3 Jahre Erfahrung
+                    {user.experience} Jahre Erfahrung
                   </Typography>
                   <Typography variant="h6" color="text.secondary">
-                    70,00 (inkl. MwSt.) /Stunde
+                    {user.price} (inkl. MwSt.) /Stunde
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    This impressive paella is a perfect party dish and a fun
-                    meal to cook together with your guests. Add 1 cup of frozen
-                    peas along with the mussels, if you like.
+                    {user.motto}
                   </Typography>
                 </CardContent>
                 <CardHeader
@@ -191,21 +203,16 @@ export default function Tprofile() {
             </Item>
             <br />
             <Item>
-              <Typography variant="h4" color="textPrimary" textAlign="left">
-                Über mich {phone}
-              </Typography>
-              <Typography paragraph>
-                Add rice and stir very gently to distribute. Top with ar minutes
-                more. (Discard any mussels that don’t open.) is simply dummy
-                text of the printing and typesetting industry. Lorem Ipsum has
-                been the industry's standard dummy text ever since the 1500s,
-                when an unknown printer took a galley of type and scrambled it
-                to make a type specimen book. It has survived not only five
-                centuries, but also the leap into electronic typesetting,
-                remaining essentially unchanged.
-              </Typography>
+              {user.bio && (
+                <>
+                  <Typography variant="h4" color="textPrimary" textAlign="left">
+                    Über mich
+                  </Typography>
+                  <Typography paragraph>{user.bio}</Typography>
+                </>
+              )}
 
-              <Item
+              {/* <Item
                 sx={{
                   display: "flex",
                   flexDirection: "row",
@@ -232,14 +239,41 @@ export default function Tprofile() {
                 <Item sx={{ boxShadow: 0, ml: 1 }}>
                   <Youtube videoId="hQc0B4Gwmhg" />
                 </Item>
-              </Item>
+              </Item>*/}
             </Item>
           </Grid>
           <Grid item xs={12} md={5}>
             <Item sx={{ boxShadow: 0 }}>
+              {UserPosts.length > 0 ? (
+                <Post
+                  title={UserPosts[UserPosts.length - 1].title}
+                  content={UserPosts[UserPosts.length - 1].content}
+                  postedBy={UserPosts[UserPosts.length - 1].postedBy}
+                  likes={UserPosts[UserPosts.length - 1].likes}
+                  id={UserPosts[UserPosts.length - 1]._id}
+                />
+              ) : (
+                ""
+              )}
+            </Item>
+            <Item sx={{ boxShadow: 0 }}>
               {/* //-------------------------------Tcontact Component */}
 
               <Tcontact />
+            </Item>
+            <Item sx={{ boxShadow: 0 }}>
+              {myPosts.length > 0
+                ? myPosts.map((post, index) => (
+                    <Post
+                      key={index}
+                      title={post.title}
+                      content={post.content}
+                      postedBy={post.postedBy}
+                      likes={post.likes}
+                      id={post._id}
+                    />
+                  ))
+                : ""}
             </Item>
           </Grid>
           <Grid item xs={12} md={7}>
@@ -251,6 +285,7 @@ export default function Tprofile() {
         </Grid>
       </Box>
       <Footer />
+      {isAuthenticated && <Success />}
     </>
   );
 }

@@ -11,19 +11,23 @@ import {
   CssBaseline,
   TextField,
   FormControlLabel,
-  Checkbox,
   Link,
   Grid,
   Box,
+  FormLabel,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Error from "./alerts/Error";
 const theme = createTheme();
 //----------------------------------------functions
 
 //------------------------------------------Main Function
 export default function Signup() {
-  const { isAuthenticated, loading, signUp, error } = useContext(AuthContext);
+  const { isAuthenticated, loading, signUp, error, user, setOpen } =
+    useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -31,13 +35,28 @@ export default function Signup() {
   } = useForm({
     defaultValues: {
       name: "",
+      last_name: "",
       email: "",
       password: "",
+      account_type: "user",
+      // user: `${
+      //   user.account_type == "user"
+      //     ? (user.therapeut = false)
+      //     : (user.user = true)
+      // }`,
+      // therapeut: `${
+      //   user.account_type == "therapeut"
+      //     ? (user.user = false)
+      //     : (user.therapeut = true)
+      // }`,
     },
   });
 
   if (loading) return <div>Loading....</div>;
-  if (isAuthenticated) return <Navigate to="/myprofile" />;
+  // if (isAuthenticated) return <Navigate to="/therapeutprofile" />;
+  if (user.account_type === "user") return <Navigate to="/userprofile" />;
+  if (user.account_type === "therapeut")
+    return <Navigate to="/therapeutprofile" />;
 
   return (
     <ThemeProvider theme={theme}>
@@ -57,7 +76,11 @@ export default function Signup() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {error && <div role="alert">{error}</div>}
+          {error && (
+            <div style={{ color: "red" }} role="alert">
+              {error}
+            </div>
+          )}
           <Box
             component="form"
             noValidate
@@ -65,7 +88,29 @@ export default function Signup() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={8}>
+                <FormLabel component="legend" required>
+                  Register as
+                </FormLabel>
+                <RadioGroup row aria-label="account_type" name="account_type">
+                  <FormControlLabel
+                    value="user"
+                    name="user"
+                    control={<Radio />}
+                    label="user"
+                    {...register("account_type", { required: false })}
+                  />
+                  <FormControlLabel
+                    value="therapeut"
+                    name="therapeut"
+                    control={<Radio />}
+                    label="therapeut"
+                    {...register("account_type", { required: false })}
+                  />
+                </RadioGroup>
+                {errors.account_type && (
+                  <div role="alert">account_type is not correct</div>
+                )}
                 <TextField
                   autoComplete="given-name"
                   name="name"
@@ -78,15 +123,19 @@ export default function Signup() {
                 />
                 {errors.name && <div role="alert">Name is required</div>}
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
+                  id="last_name"
                   label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  name="last_name"
+                  autoComplete="last_name"
+                  {...register("last_name", { required: true })}
                 />
+                {errors.last_name && (
+                  <div role="alert">Last Name is required</div>
+                )}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -99,6 +148,7 @@ export default function Signup() {
                   {...register("email", { required: true })}
                 />
                 {errors.email && <div role="alert">Email is required</div>}
+                {error && <Error />}
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -116,12 +166,12 @@ export default function Signup() {
                 )}
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={
                     <Checkbox value="allowExtraEmails" color="primary" />
                   }
                   label="I want to receive inspiration, marketing promotions and updates via email."
-                />
+                /> */}
               </Grid>
             </Grid>
             <Button
@@ -134,7 +184,7 @@ export default function Signup() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/signin" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>

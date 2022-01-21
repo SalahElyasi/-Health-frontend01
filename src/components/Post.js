@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import useStyles from "../Styles";
+import { useForm } from "react-hook-form";
+import { Navigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
+import { Link } from "react-router-dom";
+
 import {
   CardMedia,
   Card,
@@ -11,12 +17,64 @@ import {
   Collapse,
   Avatar,
   IconButton,
+  InputBase,
+  Divider,
+  Paper,
+  Box,
+  Menu,
+  MenuItem,
 } from "@mui/material";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Favorite, Share, ExpandMore, MoreVert } from "@mui/icons-material";
 
 //--------------------------------------------------main Function
-const Post = () => {
+const Post = ({ title, content, postedBy, likes, id, comments, createdAt }) => {
+  const classes = useStyles();
+  const {
+    isAuthenticated,
+    user,
+    userInfo,
+    likePost,
+    unlikePost,
+    commentPost,
+    deletePost,
+    deleteCommentPost,
+    setUserView,
+  } = useContext(AuthContext);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      text: "",
+      id: id,
+    },
+  });
+  const onSubmit = (data) => {
+    commentPost(data);
+    reset();
+  };
+
+  const myPost = () => {
+    try {
+      const UserPhoto = userInfo.find(
+        (user) => user._id.toString() === postedBy.toString()
+      );
+      return UserPhoto;
+    } catch {
+      return [];
+    }
+  };
+  const UserPhoto = myPost();
+
   const [expanded, setExpanded] = useState(false);
+  // const {
+  //   posts: { title, content },
+  // } = useContext(AuthContext);
   //--------------------------------------------------Functions
 
   const truncateString = (str, num) => {
@@ -27,10 +85,7 @@ const Post = () => {
       return str + "...";
     }
   };
-  const truncateTxt = truncateString(
-    "A-tisket a-tasket A green and yellow basket",
-    60
-  );
+  const truncateTxt = truncateString(`${title}`, 60);
 
   const ExpandMoreFunc = styled((props) => {
     const { expand, ...other } = props;
@@ -47,24 +102,81 @@ const Post = () => {
     setExpanded(!expanded);
   };
 
+  const likeFunction = (id) => {
+    if (isAuthenticated) {
+      if (likes && likes.includes(user._id)) {
+        unlikePost(id);
+      } else {
+        likePost(id);
+      }
+    } else {
+      return <Navigate to="/signup" />;
+    }
+  };
+
+  const viewFunction = () => {
+    setUserView(UserPhoto);
+  };
+  //---------------------------------------
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  //--------------------------------------------------------------Main
   const PostCard = (
     <Card sx={{ maxWidth: "100%" }}>
       <CardHeader
         sx={{ textAlign: "left" }}
         avatar={
           <Avatar
+            onClick={viewFunction}
+            component={Link}
+            to="/UserViewProfile"
             sx={{ bgcolor: red[500] }}
             aria-label="recipe"
-            src="https://cdn.pixabay.com/photo/2016/11/21/12/42/beard-1845166_1280.jpg"
+            src={UserPhoto && UserPhoto.image}
           />
         }
         action={
-          <IconButton aria-label="settings">
-            <MoreVert />
-          </IconButton>
+          <div>
+            <IconButton
+              aria-label="settings"
+              id="basic-button"
+              aria-controls="basic-menu"
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+            >
+              <MoreVert />
+            </IconButton>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem onClick={() => deletePost(id, postedBy, user)}>
+                Delete
+              </MenuItem>
+            </Menu>
+          </div>
         }
-        title="Name"
-        subheader="September 14, 2021"
+        title={UserPhoto && UserPhoto.name}
+        subheader={
+          createdAt &&
+          new Intl.DateTimeFormat("en-GB", {
+            month: "long",
+            day: "2-digit",
+            year: "numeric",
+          }).format(new Date(createdAt))
+        }
       />
       <CardMedia
         component="img"
@@ -81,13 +193,35 @@ const Post = () => {
       />
       <CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <Favorite />
+          <IconButton
+            sx={{ mr: 2 }}
+            aria-label="add to favorites"
+            onClick={() => {
+              likeFunction(id);
+            }}
+          >
+            <Favorite
+              sx={{
+                color: `${
+                  likes && likes.includes(user._id) ? red[500] : red[100]
+                }`,
+              }}
+            />
           </IconButton>
+          <Typography
+            zeroMinWidth="false"
+            width="none"
+            textAlign="left"
+            variant="body2"
+            color="text.secondary"
+          >
+            {likes && likes.length + " Liked"}
+          </Typography>
           <IconButton aria-label="share">
             <Share />
           </IconButton>
         </CardActions>
+
         <CardActions disableSpacing>
           <Typography
             zeroMinWidth="false"
@@ -110,17 +244,102 @@ const Post = () => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography textAlign="left" paragraph>
-              Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
-              over medium-high heat. Add chicken, shrimp and chorizo, and cook,
-              stirring occasionally until lightly browned, 6 to 8 minutes.
-              Transfer shrimp to a large plate and set aside, leaving chicken
-              and chorizo in the pan. Add pimentón, bay leaves, garlic,
-              tomatoes, onion, salt and pepper, and cook, stirring often until
-              thickened and fragrant, about 10 minutes. Add saffron broth and
-              remaining 4 1/2 cups chicken broth; bring to a boil.
+              {content}
             </Typography>
           </CardContent>
         </Collapse>
+        <Typography
+          zeroMinWidth="false"
+          width="none"
+          textAlign="left"
+          variant="body2"
+          color="text.secondary"
+        >
+          {comments &&
+            comments.map((c, index) => (
+              <Paper
+                className={classes.hover}
+                key={index}
+                sx={{
+                  p: "0",
+                  mr: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  width: "98%",
+                  boxShadow: 0,
+                }}
+              >
+                <Typography
+                  margin="0"
+                  zeroMinWidth="false"
+                  width="100%"
+                  textAlign="left"
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  {c.text}
+                </Typography>
+                {(postedBy && user && c.postedBy === user._id) ||
+                postedBy === user._id ? (
+                  <>
+                    <Divider
+                      sx={{ height: 28, m: 0.5 }}
+                      orientation="vertical"
+                    />
+                    <IconButton
+                      sx={{ p: "10px" }}
+                      aria-label="directions"
+                      className={classes.button}
+                      type="submit"
+                      onClick={() => deleteCommentPost(id, c._id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </>
+                ) : null}
+              </Paper>
+            ))}
+        </Typography>
+
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          sx={{ mt: 0 }}
+        >
+          <Paper
+            sx={{
+              p: "1px 5px",
+              mt: 2,
+              display: "flex",
+              alignItems: "center",
+              width: "96.5%",
+              boxShadow: 0,
+              border: 1,
+              borderColor: "grey.400",
+              borderRadius: 36,
+            }}
+          >
+            <InputBase
+              sx={{ ml: 1, flex: 1 }}
+              size="small"
+              autoComplete="given-comment"
+              id="text"
+              name="text"
+              placeholder="Comment..."
+              {...register("text", { required: false })}
+            />
+            <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+            <IconButton
+              sx={{ p: "5px" }}
+              aria-label="directions"
+              className={classes.button}
+              type="submit"
+            >
+              <AddCircleIcon />
+            </IconButton>
+          </Paper>
+        </Box>
       </CardContent>
     </Card>
   );

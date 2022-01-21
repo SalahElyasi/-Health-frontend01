@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useForm } from "react-hook-form";
+import useStyles from "../Styles";
 
 import {
   Container,
@@ -19,6 +20,8 @@ const theme = createTheme();
 //------------------------------------------Main Function
 
 const PostMaker = () => {
+  const classes = useStyles();
+
   const { error, createPost } = useContext(AuthContext);
 
   const {
@@ -55,6 +58,7 @@ const PostMaker = () => {
             onSubmit={handleSubmit(createPost)}
             sx={{ mt: 3 }}
           >
+         
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -96,6 +100,7 @@ const PostMaker = () => {
               <Grid item xs={12}></Grid>
             </Grid>
             <Button
+              className={classes.button}
               type="submit"
               fullWidth
               variant="contained"

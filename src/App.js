@@ -9,33 +9,45 @@ import Signup from "./components/Signup";
 import NotFound from "./components/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Tprofile from "./components/Tprofile";
+import UserViewProfile from "./components/UserViewProfile";
 import { ThemeProvider } from "@mui/material";
 import customTheme from "./assets/theme/theme";
-import { ja } from "date-fns/locale";
+import UserProfile from "./components/UserProfile";
 
 function App() {
   return (
     <ThemeProvider theme={customTheme}>
-      <StateContext.Provider>
-        <AuthState>
+      <AuthState>
+        <StateContext.Provider value={null}>
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route exact path="/home" element={<Home />} />
             <Route path="/signin" element={<Signin />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/UserViewProfile" element={<UserViewProfile />} />
 
             <Route
-              path="/myprofile"
+              exact
+              path="/therapeutprofile"
               element={
                 <ProtectedRoute>
                   <Tprofile />
                 </ProtectedRoute>
               }
             />
+            <Route
+              exact
+              path="/userprofile"
+              element={
+                <ProtectedRoute>
+                  <UserProfile />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </AuthState>
-      </StateContext.Provider>
+        </StateContext.Provider>
+      </AuthState>
     </ThemeProvider>
   );
 }

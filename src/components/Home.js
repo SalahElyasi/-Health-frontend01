@@ -1,11 +1,8 @@
-import React from "react";
-import Appbar from "./Appbar";
-import Leftbar from "./Leftbar";
+import React, { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 import Navbar from "./Navbar";
-import Tprofile from "./Tprofile";
 import Post from "./Post";
 import Footer from "./footer/Footer";
-import SearchBar from "./SearchBar";
 import useStyles from "../Styles";
 
 //-----------------------MUI
@@ -21,6 +18,8 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+
+import TherapistCard from "./TherapistCard";
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -51,53 +50,16 @@ const card = (
     </CardActions>
   </React.Fragment>
 );
-
-const TherapistCard = (
-  <React.Fragment>
-    <CardContent
-      sx={{
-        display: "flex",
-        alignItems: "flex-start",
-        flexDirection: "column",
-      }}
-    >
-      <CardMedia
-        component="img"
-        height="auto"
-        image="https://cdn.pixabay.com/photo/2015/03/08/09/30/head-663997__340.jpg"
-        alt="Paella dish"
-      />
-      <Typography variant="h6" color="textPrimary" textAlign="center">
-        Name
-      </Typography>
-      <Typography variant="caption" color="text.secondary" textAlign="left">
-        Expertise
-      </Typography>
-      <Typography variant="caption" color="text.secondary" textAlign="left">
-        Ort
-      </Typography>
-      <Typography variant="caption" color="text.secondary" textAlign="left">
-        English , Deutsch
-      </Typography>
-      <Typography variant="caption" color="text.secondary" textAlign="left">
-        3 Jahre Erfahrung
-      </Typography>
-      <Typography variant="caption" color="text.secondary" textAlign="left">
-        70,00 (inkl. MwSt.) /Stunde
-      </Typography>
-    </CardContent>
-    <CardActions
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-    >
-      <Button variant="contained" size="small">
-        Details & Buchung
-      </Button>
-    </CardActions>
-  </React.Fragment>
-);
-
+//---------------------------------------------------------------------------------Main Component Home
 const Home = () => {
-  const classes = useStyles();
+  // const classes = useStyles();
+  const { posts, reversedPosts, userInfo } = useContext(AuthContext);
+
+  //----------------------------------------------------------functions
+  // const viewFunction = (id) => {
+
+  // };
+
   return (
     <div>
       <Navbar />
@@ -107,7 +69,7 @@ const Home = () => {
         <Grid container spacing={0} rowSpacing={1}>
           {/* //---------------------------------------------Left Side */}
           <Grid item xs={0} sm={2} md={2}>
-            <Item sx={{ height: "97%" }}></Item>
+            <Item sx={{ height: "97%", boxShadow: 0 }}></Item>
           </Grid>
           <Grid item xs={12} sm={8} md={8}>
             <Item sx={{ boxShadow: 0 }}>
@@ -116,18 +78,36 @@ const Home = () => {
               </Typography>
             </Item>
             {/* //----------------------------------------------------------Post */}
-            <Item
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                justifyContent: "center",
-                boxShadow: 0,
-                width: "100%",
-              }}
-            >
-              <Post />
-            </Item>
+
+            {/* <ScrollBar /> */}
+            {/* <VerticalTabs /> */}
+            {/* <FixedScrollBar /> */}
+
+            {reversedPosts &&
+              reversedPosts.map((p) => (
+                <Item
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    boxShadow: 0,
+                    width: "100%",
+                  }}
+                >
+                  <Post
+                    key={p._id}
+                    title={p.title}
+                    content={p.content}
+                    postedBy={p.postedBy}
+                    likes={p.likes}
+                    id={p._id}
+                    comments={p.comments}
+                    createdAt={p.createdAt}
+                  />
+                </Item>
+              ))}
+
             {/* //----------------------------------------------------------TherapistCard */}
             <Item
               sx={{
@@ -137,10 +117,14 @@ const Home = () => {
                 boxShadow: 0,
               }}
             >
-              <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
-              <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
-              <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
-              <Card sx={{ width: "100%" }}>{TherapistCard}</Card>
+              {userInfo &&
+                userInfo
+                  .filter((user) => user.account_type != "user")
+                  .map((user, index) => (
+                    <Card key={index} sx={{ width: "100%" }}>
+                      <TherapistCard user={user} />
+                    </Card>
+                  ))}
             </Item>
             <Item sx={{ display: "inline-flex", boxShadow: 0 }}>
               <Card sx={{ width: "100%" }}>{card}</Card>
@@ -150,7 +134,7 @@ const Home = () => {
           </Grid>
           {/* //---------------------------------------------Right Side */}
           <Grid item xs={0} sm={2} md={2}>
-            <Item sx={{ height: "97%" }}></Item>
+            <Item sx={{ height: "97%", boxShadow: 0 }}></Item>
           </Grid>
         </Grid>
       </Box>

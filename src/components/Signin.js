@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Error from "./alerts/Error";
 
 //---------------------------------------------
 function Copyright(props) {
@@ -42,7 +43,8 @@ const theme = createTheme();
 
 //------------------------------------------Main Function
 export default function Signin() {
-  const { isAuthenticated, loading, signIn, error } = useContext(AuthContext);
+  const { isAuthenticated, loading, signIn, error, user } =
+    useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -66,7 +68,10 @@ export default function Signin() {
   // };
 
   if (loading) return <div>Loading...</div>;
-  if (isAuthenticated) return <Navigate to="/myprofile" />;
+  if (user.account_type === "user") return <Navigate to="/userprofile" />;
+  if (user.account_type === "therapeut")
+    return <Navigate to="/therapeutprofile" />;
+
   //-----------------------------------------------------------------------------return
   return (
     <ThemeProvider theme={theme}>
@@ -104,8 +109,12 @@ export default function Signin() {
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
-              {error && <div role="alert">{error}</div>}
             </Typography>
+            {error && (
+              <div style={{ color: "red" }} role="alert">
+                {error}
+              </div>
+            )}
             <Box
               component="form"
               noValidate
@@ -124,6 +133,7 @@ export default function Signin() {
                 {...register("email", { required: true })}
               />
               {errors.email && <div role="alert">Email is required</div>}
+              {error && <Error />}
               <TextField
                 margin="normal"
                 required
@@ -155,7 +165,7 @@ export default function Signin() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
