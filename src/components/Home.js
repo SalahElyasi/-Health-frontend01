@@ -3,7 +3,6 @@ import { AuthContext } from "../context/AuthContext";
 import Navbar from "./Navbar";
 import Post from "./Post";
 import Footer from "./footer/Footer";
-import useStyles from "../Styles";
 
 //-----------------------MUI
 import {
@@ -53,7 +52,7 @@ const card = (
 //---------------------------------------------------------------------------------Main Component Home
 const Home = () => {
   // const classes = useStyles();
-  const { posts, reversedPosts, userInfo } = useContext(AuthContext);
+  const { reversedPosts, userInfo } = useContext(AuthContext);
 
   //----------------------------------------------------------functions
   // const viewFunction = (id) => {
@@ -84,8 +83,9 @@ const Home = () => {
             {/* <FixedScrollBar /> */}
 
             {reversedPosts &&
-              reversedPosts.map((p) => (
+              reversedPosts.map((p, index) => (
                 <Item
+                  key={index}
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -119,7 +119,7 @@ const Home = () => {
             >
               {userInfo &&
                 userInfo
-                  .filter((user) => user.account_type != "user")
+                  .filter((user) => user.account_type !== "user")
                   .map((user, index) => (
                     <Card key={index} sx={{ width: "100%" }}>
                       <TherapistCard user={user} />

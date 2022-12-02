@@ -20,10 +20,16 @@ export default function FullWidthGrid() {
     <Box sx={{ flexGrow: 1, padding: "10px", bgcolor: "#ADD8E6" }}>
       <Grid container spacing={0} rowSpacing={1} padding={10}>
         <Grid item xs={0} sm={1} md={1}></Grid>
-        <Grid item xs={6} sm={4} md={3}>
+        <Grid item xs={12} sm={12} md={3}>
           <Item sx={{ boxShadow: 0, bgcolor: "inherit" }}>
             <Typography variant="h6" color="textPrimary" textAlign="left">
               About Us
+            </Typography>
+            <Typography variant="h6" color="textPrimary" textAlign="left">
+              Impressum
+            </Typography>
+            <Typography variant="h6" color="textPrimary" textAlign="left">
+              Datenschutz
             </Typography>
             <Box
               sx={{
@@ -33,51 +39,19 @@ export default function FullWidthGrid() {
               }}
               onClick={preventDefault}
             >
-              <Link href="#" underline="none" color="inherit">
+              {/* <Link href="#" underline="none" color="inherit">
                 Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
+              </Link> */}
+              
             </Box>
           </Item>
+                   
         </Grid>
         <Grid item xs={6} sm={4} md={2}>
           <Item sx={{ boxShadow: 0, bgcolor: "inherit" }}>
             <Typography variant="h6" color="textPrimary" textAlign="left">
               Services
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-              onClick={preventDefault}
-            >
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-            </Box>
-          </Item>
-        </Grid>
-        <Grid item xs={6} sm={4} md={2}>
-          <Item sx={{ boxShadow: 0, bgcolor: "inherit" }}>
             <Typography variant="h6" color="textPrimary" textAlign="left">
               Contact US
             </Typography>
@@ -89,22 +63,15 @@ export default function FullWidthGrid() {
               }}
               onClick={preventDefault}
             >
-              <Link href="#" underline="none" color="inherit">
+              {/* <Link href="#" underline="none" color="inherit">
                 Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
-              <Link href="#" underline="none" color="inherit">
-                Lorem
-              </Link>
+              </Link> */}
+              
             </Box>
           </Item>
         </Grid>
-        <Grid item xs={6} sm={4} md={3}>
+        
+        <Grid item xs={12} sm={12} md={3}>
           <Item sx={{ boxShadow: 0, bgcolor: "inherit" }}>
             <Typography variant="h6" color="textPrimary" textAlign="left">
               Social
