@@ -1,8 +1,10 @@
 import React from "react";
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-
-//-------------------------------------------------------Main component
+//-------------------------------------------------------Backend-Root-URL
+// let rootUrl = "http://localhost:5000";
+let rootUrl = "https://health01api.herokuapp.com";
+//-------------------------------------------------------Main-component
 export const AuthContext = createContext();
 
 const AuthState = ({ children }) => {
@@ -26,12 +28,12 @@ const AuthState = ({ children }) => {
         setLoading(true);
         const {
           data: { success },
-        } = await axios.get("http://localhost:5000/auth/verify-session", {
+        } = await axios.get(`${rootUrl}/auth/verify-session`, {
           headers: { Authorization: token },
         });
         if (success) {
           const { data: userInfo } = await axios.get(
-            "http://localhost:5000/auth/me",
+            `${rootUrl}/auth/me`,
             { headers: { Authorization: token } }
           );
           // localStorage.setItem("localUser", JSON.stringify(userInfo));
@@ -80,9 +82,9 @@ const AuthState = ({ children }) => {
         setLoading(true);
         const {
           data: { token },
-        } = await axios.post("http://localhost:5000/auth/signup", newUser);
+        } = await axios.post(`${rootUrl}/auth/signup`, newUser);
         const { data: userInfo } = await axios.get(
-          "http://localhost:5000/auth/me",
+          `${rootUrl}/auth/me`,
           { headers: { Authorization: token } }
         );
 
@@ -116,9 +118,9 @@ const AuthState = ({ children }) => {
         setLoading(true);
         const {
           data: { token },
-        } = await axios.post("http://localhost:5000/auth/signin", user);
+        } = await axios.post(`${rootUrl}/auth/signin`, user);
         const { data: userInfo } = await axios.get(
-          "http://localhost:5000/auth/me",
+          `${rootUrl}/auth/me`,
           { headers: { Authorization: token } }
         );
 
@@ -131,7 +133,8 @@ const AuthState = ({ children }) => {
         setOpen(true);
       } catch (error) {
         setLoading(false);
-        setError(error.response.data.error);
+        // setError(error.response.data.error);
+        setError(error.message);
         setTimeout(() => setError(null), 3000);
       }
     } else {
@@ -147,11 +150,11 @@ const AuthState = ({ children }) => {
   //     const {
   //       data: { token },
   //     } = await axios.patch(
-  //       `http://localhost:5000/auth/update/${user._id}`,
+  //       `${rootUrl}/auth/update/${user._id}`,
   //       newUser
   //     ); //
   //     const { data: userInfo } = await axios.get(
-  //       "http://localhost:5000/auth/me",
+  //       `${rootUrl}/auth/me`,
   //       { headers: { Authorization: token } }
   //     );
 
@@ -172,7 +175,7 @@ const AuthState = ({ children }) => {
     try {
       setLoading(true);
       const { data: userInfo } = await axios.patch(
-        `http://localhost:5000/auth/update/${user._id}`,
+        `${rootUrl}/auth/update/${user._id}`,
         editedUser,
         { headers: { Authorization: localStorage.getItem("token") } }
       );
@@ -189,7 +192,7 @@ const AuthState = ({ children }) => {
   //-------------------------------------------------------getUser
   const getUser = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/user");
+      const res = await axios.get(`${rootUrl}/user`);
       localStorage.setItem("UserInfo", JSON.stringify(res.data));
       setUserInfo(JSON.parse(localStorage.getItem("UserInfo")));
     } catch (error) {
@@ -206,7 +209,7 @@ const AuthState = ({ children }) => {
   const createPost = async (newUser) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/auth/createpost",
+        `${rootUrl}/auth/createpost`,
         newUser,
         { headers: { Authorization: localStorage.getItem("token") } }
       );
@@ -220,7 +223,7 @@ const AuthState = ({ children }) => {
   //-------------------------------------------------------getPost
   const getPost = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/getpost");
+      const res = await axios.get(`${rootUrl}/getpost`);
       localStorage.setItem("localPosts", JSON.stringify(res.data));
       setPosts(JSON.parse(localStorage.getItem("localPosts")));
       if (posts) {
@@ -238,7 +241,7 @@ const AuthState = ({ children }) => {
   //-------------------------------------------------------getMyPosts
   const getMyPosts = async (id) => {
     try {
-      const res = await axios.get("http://localhost:5000/auth/myposts", {
+      const res = await axios.get(`${rootUrl}/auth/myposts`, {
         headers: { Authorization: localStorage.getItem("token") },
       });
       localStorage.setItem("myPosts", JSON.stringify(res.data));
@@ -250,7 +253,7 @@ const AuthState = ({ children }) => {
   };
   //-------------------------------------------------------likePost
   const likePost = async (id) => {
-    fetch("http://localhost:5000/auth/like", {
+    fetch(`${rootUrl}/auth/like`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -271,7 +274,7 @@ const AuthState = ({ children }) => {
   };
   //-------------------------------------------------------unlikePost
   const unlikePost = async (id) => {
-    fetch("http://localhost:5000/auth/unlike", {
+    fetch(`${rootUrl}/auth/unlike`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -293,7 +296,7 @@ const AuthState = ({ children }) => {
   //-------------------------------------------------------deletePost
 
   // const deletePost = (id) => {
-  //   fetch(`http://localhost:5000/auth/deletepost/${id}`, {
+  //   fetch(`${rootUrl}/auth/deletepost/${id}`, {
   //     method: "delete",
   //     headers: {
   //       "Content-Type": "application/json",
@@ -315,7 +318,7 @@ const AuthState = ({ children }) => {
     if (isAuthenticated && commentInfo.text) {
       try {
         const res = await axios.patch(
-          `http://localhost:5000/auth/comment/${commentInfo.id}`,
+          `${rootUrl}/auth/comment/${commentInfo.id}`,
           commentInfo,
           {
             headers: { Authorization: localStorage.getItem("token") },
@@ -335,7 +338,7 @@ const AuthState = ({ children }) => {
     if (isAuthenticated && postedBy === user._id) {
       try {
         const res = await axios.delete(
-          `http://localhost:5000/auth/deletepost/${id}`,
+          `${rootUrl}/auth/deletepost/${id}`,
 
           {
             headers: { Authorization: localStorage.getItem("token") },
@@ -351,7 +354,7 @@ const AuthState = ({ children }) => {
   //-------------------------------------------------------deleteCommentPost
   const deleteCommentPost = async (id, commentId) => {
     if (isAuthenticated) {
-      fetch("http://localhost:5000/auth/deletecomment", {
+      fetch(`${rootUrl}/auth/deletecomment`, {
         method: "put",
         headers: {
           "Content-Type": "application/json",

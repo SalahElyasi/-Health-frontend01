@@ -11,9 +11,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function Error() {
   const { error, setOpen, open } = useContext(AuthContext);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
+  // const handleClick = () => {
+  //   setOpen(true);
+  // };
 
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {

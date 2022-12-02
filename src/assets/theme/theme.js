@@ -14,12 +14,7 @@ const customTheme = createTheme({
       dark: "#cb9ca1",
       contrastText: "#000",
     },
-    // [customTheme.breakpoints.up("sm")]: {
-    //   width: "50%",
-    //   borderColor: "error.main",
-    //   border: 2,
-    //   borderRadius: "16px",
-    // },
+    
   },
 });
 

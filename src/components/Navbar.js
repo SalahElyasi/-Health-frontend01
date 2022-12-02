@@ -24,7 +24,6 @@ import {
   AddBox,
   Home,
   Logout,
-  ArrowDropDown,
   ArrowDropDownCircle,
 } from "@mui/icons-material";
 //-------------------------------------------------------------------
@@ -81,15 +80,15 @@ const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   //-----------------------------
   const classes = useStyles();
   const [setting, setSetting] = useState(false);
   const [postForm, setPostForm] = useState(false);
-  const { isAuthenticated, logout, setError } = useContext(AuthContext);
   const {
+    isAuthenticated, logout, setError,
     user: { email, name, account_type, image },
   } = useContext(AuthContext);
+
   //------------------------------------------Function
 
   const toggleSetting = () => {
@@ -102,7 +101,7 @@ const Navbar = () => {
     setSetting(false);
   };
 
-  //-------------------------
+  //-------------------------downMenu
   const downMenu = (
     <div>
       <IconButton
@@ -143,7 +142,8 @@ const Navbar = () => {
     setError(null);
     AuthButton = (
       <div>
-        <Button
+        <Button 
+          className={classes.btnSignin}
           component={Link}
           to="/signin"
           color="inherit"
@@ -153,6 +153,7 @@ const Navbar = () => {
         </Button>
 
         <Button
+          className={classes.btnSignup}
           component={Link}
           to="/signup"
           sx={{ ml: 2, mr: 2 }}
@@ -261,14 +262,13 @@ const Navbar = () => {
   //------------------------------------------return
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+      <Box sx={{ flexGrow: 1 }} >
+        <AppBar position="static" >
           <Toolbar>
             <Avatar
+              className={classes.logo}
               component={Link}
               to="/home"
-              sx={{ height: "50px", width: "100px", mr: 2 }}
-              variant="square"
               alt="logo"
             >
               Logo
@@ -276,8 +276,12 @@ const Navbar = () => {
             <Link to="/home">
               <Home />
             </Link>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Health
+            <Typography
+              className={classes.logoText}
+              component="div" 
+              sx={{ flexGrow: 1 }}
+              >
+              B-mind
             </Typography>
             {AuthButton}
 
@@ -298,5 +302,6 @@ const Navbar = () => {
     </>
   );
 };
+
 
 export default Navbar;

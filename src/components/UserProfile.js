@@ -1,41 +1,33 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { StateContext } from "../context/Context";
 import Navbar from "./Navbar";
 import Footer from "./footer/Footer";
-import Post from "./Post";
 import ProtectedRoute from "./ProtectedRoute";
-import Youtube from "./Youtube";
-import Tcontact from "./Tcontact";
 import useStyles from "../Styles";
 
-import Image from "./Image";
 import {
   styled,
   Box,
   Paper,
   Grid,
   Card,
-  TextField,
   CardHeader,
   CardMedia,
   CardContent,
   CardActions,
-  Collapse,
   Avatar,
   IconButton,
   Typography,
-  Rating,
-  Stack,
+  
 } from "@mui/material";
 //-------------------date
-import isWeekend from "date-fns/isWeekend";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+// import isWeekend from "date-fns/isWeekend";
+// import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
-import { LocalizationProvider, StaticDatePicker } from "@mui/lab";
+// import { LocalizationProvider, StaticDatePicker } from "@mui/lab";
 //-------------------------------grid
 import { red } from "@mui/material/colors";
-import { Favorite, Share, ExpandMore } from "@mui/icons-material";
+import { Share } from "@mui/icons-material";
 
 const ExpandMoreStyle = styled((props) => {
   const { expand, ...other } = props;
@@ -59,7 +51,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function UserProfile() {
   const classes = useStyles();
-  const { posts, user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   // const {
   //   user: { _id, email, name, phone },
   // } = useContext(AuthContext);
@@ -67,9 +59,9 @@ export default function UserProfile() {
   const [expanded, setExpanded] = React.useState(false);
   const [value, setValue] = React.useState(new Date()); //for Date
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  // const handleExpandClick = () => {
+  //   setExpanded(!expanded);
+  // };
 
   return (
     <>

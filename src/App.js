@@ -12,10 +12,12 @@ import Tprofile from "./components/Tprofile";
 import UserViewProfile from "./components/UserViewProfile";
 import { ThemeProvider } from "@mui/material";
 import customTheme from "./assets/theme/theme";
+import BreakPoints from "./assets/theme/breakPoints";
 import UserProfile from "./components/UserProfile";
 
 function App() {
   return (
+    <BreakPoints>
     <ThemeProvider theme={customTheme}>
       <AuthState>
         <StateContext.Provider value={null}>
@@ -49,6 +51,7 @@ function App() {
         </StateContext.Provider>
       </AuthState>
     </ThemeProvider>
+    </BreakPoints>
   );
 }
 

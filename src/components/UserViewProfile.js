@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { StateContext } from "../context/Context";
+// import { StateContext } from "../context/Context";
 import Navbar from "./Navbar";
 import Footer from "./footer/Footer";
 import Post from "./Post";

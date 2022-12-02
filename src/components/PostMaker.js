@@ -15,13 +15,11 @@ import {
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 const theme = createTheme();
-//----------------------------------------functions
 
 //------------------------------------------Main Function
 
 const PostMaker = () => {
   const classes = useStyles();
-
   const { error, createPost } = useContext(AuthContext);
 
   const {
@@ -34,7 +32,9 @@ const PostMaker = () => {
       content: "",
     },
   });
-
+  //----------------------------------------functions
+  
+//----------------------------------------return
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="70%">
@@ -105,6 +105,7 @@ const PostMaker = () => {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              
             >
               Send
             </Button>
