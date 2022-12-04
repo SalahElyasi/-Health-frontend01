@@ -3,7 +3,7 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 //-------------------------------------------------------Backend-Root-URL
 // let rootUrl = "http://localhost:5000";
-let rootUrl = "https://health01api.herokuapp.com";
+let rootUrl = "https://health01api.onrender.com";
 //-------------------------------------------------------Main-component
 export const AuthContext = createContext();
 
